@@ -54,14 +54,14 @@ pub struct Exercise {
 
 impl fmt::Display for Exercise {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}-{}", self.chapter, self.exercise)
+        write!(f, "chapter {} exercise {}", self.chapter, self.exercise)
     }
 }
 
 impl Exercise {
     fn new(root: &PathBuf, number: &str) -> Exercise {
         let (chapter, exercise_number) = number.split('-').collect_tuple().unwrap();
-        let path = root.join(chapter).join(exercise_number);
+        let path = root.join(format!("chapter-{}", chapter)).join(format!("exercise-{}", exercise_number));
         Exercise { chapter: String::from(chapter), exercise: String::from(exercise_number), path }
     }
 
@@ -116,7 +116,7 @@ fn test_generate_exercise() -> Result<(), std::io::Error> {
 
     generate(&root, "1-1").unwrap();
 
-    let exercise_root = root.join("1").join("1");
+    let exercise_root = root.join("chapter-1").join("exercise-1");
     assert_eq!(exercise_root.exists(), true);
     assert_eq!(exercise_root.join("README.md").exists(), true);
     assert_eq!(exercise_root.join("test.rkt").exists(), true);
